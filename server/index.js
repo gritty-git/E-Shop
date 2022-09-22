@@ -6,6 +6,8 @@ const cors = require('cors')
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const userRoutes = require('./routes/userRoutes');
+
 
 dotenv.config();
 connectDB();
@@ -17,6 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
+app.use('/api/users', userRoutes);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
