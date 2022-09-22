@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const connectDB = require('./config/database');
 const morgan = require('morgan');
 const cors = require('cors')
 const path = require('path');
@@ -7,6 +8,7 @@ const bodyParser = require('body-parser');
 
 
 dotenv.config();
+connectDB();
 const app = express();
 
 
