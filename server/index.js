@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const cors = require('cors')
 const path = require('path');
 const bodyParser = require('body-parser');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware.js');
 
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -23,6 +24,8 @@ app.use(cors());
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 
+app.use(notFound);
+app.use(errorHandler);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
