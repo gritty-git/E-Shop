@@ -15,6 +15,8 @@ function Header() {
     const userInfo = useSelector(state => state.auth.userInfo);
     const dispatch = useDispatch();
     const logoutHandler = () => {
+
+        localStorage.removeItem('userInfo');
         dispatch(authActions.signOut());
         navigate(`/login`);
     }

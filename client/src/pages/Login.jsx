@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
@@ -12,9 +12,17 @@ const Login = () => {
     const [password, setPassword] = useState('');
 
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const loading = useSelector((state) => state.auth.loading);
+    const isAuthenticated = useSelector((state) => state.auth.authenticated);
     const [errorMsg, setErrorMsg] = useState('');
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [dispatch, isAuthenticated])
+
     const submitHandler = async (e) => {
         e.preventDefault();
         dispatch(authActions.authRequest());
