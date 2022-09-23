@@ -6,6 +6,7 @@ const cors = require('cors')
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 
@@ -20,6 +21,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
