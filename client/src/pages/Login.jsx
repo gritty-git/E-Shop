@@ -7,13 +7,12 @@ import FormContainer from '../components/FormContainer'
 import { authActions } from '../store/auth';
 import axios from 'axios'
 
-const LoginScreen = () => {
+const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const dispatch = useDispatch();
 
-    const authStatus = useSelector((state) => state.auth.authenticated);
     const loading = useSelector((state) => state.auth.loading);
     const [errorMsg, setErrorMsg] = useState('');
     const submitHandler = async (e) => {
@@ -84,4 +83,4 @@ const LoginScreen = () => {
     )
 }
 
-export default LoginScreen;
+export default Login;
