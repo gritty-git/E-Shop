@@ -15,6 +15,7 @@ function Header() {
     const dispatch = useDispatch();
     const logoutHandler = () => {
         dispatch(authActions.signOut());
+        navigate(`/login`);
     }
 
     return (
@@ -36,17 +37,21 @@ function Header() {
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/cart"><i className='fas fa-shopping-cart'></i> Cart</NavLink>
                     </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Profile
-                        </a>
-                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <NavLink className="dropdown-item" to="/profile">View Profile</NavLink>
-                            <NavLink className="dropdown-item" to="/userlist">View All Users</NavLink>
-                            <NavLink className="dropdown-item" to="/login">Sign Out</NavLink>
+                    {authenticated ?
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Profile
+                            </a>
+                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <NavLink className="dropdown-item" to="/profile">View Profile</NavLink>
+                                <NavLink className="dropdown-item" to="/userlist">View All Users</NavLink>
+                                <button type="button" className="btn btn-danger" style={{ "marginLeft": 12 }} onClick={logoutHandler}>Logout</button>
 
-                        </div>
-                    </li>
+                            </div>
+                        </li>
+                        :
+                        <></>}
+
                 </ul>
                 <div className="form-inline my-2 my-lg-0">
                     <form style={{ "float": "left", "margin": "0rem 0.4rem" }} onSubmit={inputSubmit} >
