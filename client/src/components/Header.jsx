@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { authActions } from './../store/auth';
 
 function Header() {
     const navigate = useNavigate();
@@ -8,6 +10,11 @@ function Header() {
         e.preventDefault();
         navigate(`/search/${searchTerm}`, { state: {} });
         setSearchTerm("");
+    }
+    const authenticated = useSelector(state => state.auth.authenticated);
+    const dispatch = useDispatch();
+    const logoutHandler = () => {
+        dispatch(authActions.signOut());
     }
 
     return (
@@ -22,12 +29,10 @@ function Header() {
                     <li className="nav-item active">
                         <NavLink className="nav-link" to="/">Home</NavLink>
                     </li>
-                    <li className="nav-item">
+                    {authenticated ? <></> : <li className="nav-item">
                         <NavLink className="nav-link" to="/login/" > <i className='fas fa-user'></i> Login  </NavLink>
                     </li>
-                    <li className="nav-item">
-                        <NavLink className="nav-link" to="/register"> <i className='fas fa-user'></i> Register  </NavLink>
-                    </li>
+                    }
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/cart"><i className='fas fa-shopping-cart'></i> Cart</NavLink>
                     </li>
