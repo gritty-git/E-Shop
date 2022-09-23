@@ -12,6 +12,7 @@ function Header() {
         setSearchTerm("");
     }
     const authenticated = useSelector(state => state.auth.authenticated);
+    const userInfo = useSelector(state => state.auth.userInfo);
     const dispatch = useDispatch();
     const logoutHandler = () => {
         dispatch(authActions.signOut());
@@ -35,12 +36,12 @@ function Header() {
                     </li>
                     }
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/cart"><i className='fas fa-shopping-cart'></i> Cart</NavLink>
+                        <NavLink className="nav-link" to="/cart/"><i className='fas fa-shopping-cart'></i> Cart</NavLink>
                     </li>
                     {authenticated ?
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Profile
+                                {userInfo.name ? userInfo.name : ""}
                             </a>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <NavLink className="dropdown-item" to="/profile">View Profile</NavLink>

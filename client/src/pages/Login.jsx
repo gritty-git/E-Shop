@@ -27,8 +27,9 @@ const Login = () => {
                     }
                 },
             )
-            dispatch(authActions.signIn());
-            console.log(data);
+            dispatch(authActions.signIn(data));
+            localStorage.setItem('userInfo', JSON.stringify(data));
+
         } catch (error) {
             dispatch(authActions.authRequestClose());
             setErrorMsg(error.response.data.message);
