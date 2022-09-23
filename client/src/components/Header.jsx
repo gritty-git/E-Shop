@@ -23,13 +23,13 @@ function Header() {
                         <NavLink className="nav-link" to="/">Home</NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/login/" >Login</NavLink>
+                        <NavLink className="nav-link" to="/login/" > <i className='fas fa-user'></i> Login  </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/register">Register</NavLink>
+                        <NavLink className="nav-link" to="/register"> <i className='fas fa-user'></i> Register  </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/cart">Cart</NavLink>
+                        <NavLink className="nav-link" to="/cart"><i className='fas fa-shopping-cart'></i> Cart</NavLink>
                     </li>
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
