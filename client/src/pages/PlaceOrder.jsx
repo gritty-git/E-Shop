@@ -1,26 +1,60 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import { orderCreateActions } from './../store/order';
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import Loader from '../components/Loader';
 
 const PlaceOrder = () => {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cart = useSelector((state) => state.cart)
+  const { order, loading, success } = useSelector((state) => state.orderCreate);
+  const { userInfo } = useSelector((state) => state.auth);
 
   const totalPrice = cart.cartItems.reduce((acc, item) => 0 + item.price * item.qty, 0);
 
-  const placeOrderHandler = () => {
-    console.log('order')
+  useEffect(() => {
+    if (success) {
+      navigate(`/profile`);
+    }
+
+  }, [success, order])
+  //console.log(order, loading, success);
+
+  const placeOrderHandler = async () => {
+    dispatch(orderCreateActions.orderCreateRequest());
+    // console.log(order, loading, success, orderCreateActions);
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    try {
+      const { data } = await axios.post(`/api/orders`, { ...cart, totalPrice }, config);
+
+      dispatch(orderCreateActions.orderCreateSuccess(data));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(orderCreateActions.orderCreateRequestClose());
+    }
   }
 
   return (
     <>
+
       <Row>
         <Col md={8}>
           <ListGroup variant='flush'>
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Address:</strong>
+                <strong>Address : </strong>
                 {cart.shippingAddress.address}, {cart.shippingAddress.city}{' '}
                 {cart.shippingAddress.postalCode},{' '}
                 {cart.shippingAddress.country}
@@ -83,6 +117,7 @@ const PlaceOrder = () => {
                   Place Order
                 </Button>
               </ListGroup.Item>
+              {loading && <Loader />}
             </ListGroup>
           </Card>
         </Col>
