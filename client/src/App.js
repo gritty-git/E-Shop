@@ -13,6 +13,7 @@ import Profile from './pages/Profile';
 import UserList from './pages/UserList';
 import ProductScreen from './pages/ProductScreen';
 import Shipping from './pages/Shipping';
+import PlaceOrder from './pages/PlaceOrder';
 
 
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/userlist" element={<UserList />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/placeorder" element={<PlaceOrder />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/product/:id" element={<ProductScreen />} />
           <Route path="/shipping" element={<Shipping />} />

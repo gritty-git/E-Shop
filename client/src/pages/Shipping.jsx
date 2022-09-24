@@ -23,7 +23,7 @@ const Shipping = () => {
         dispatch(cartActions.saveShippingAddress({ address, city, postalCode, country }));
 
         localStorage.setItem('shippingAddress', JSON.stringify({ address, city, postalCode, country }));
-        navigate('/profile');
+        navigate('/placeorder');
     }
 
     return (
