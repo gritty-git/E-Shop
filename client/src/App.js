@@ -14,6 +14,7 @@ import UserList from './pages/UserList';
 import ProductScreen from './pages/ProductScreen';
 import Shipping from './pages/Shipping';
 import PlaceOrder from './pages/PlaceOrder';
+import Order from './pages/Order';
 
 
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/cart/:id" element={<Cart />} />
           <Route path="/cart/" element={<Cart />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/order/:id" element={<Order />} />
           <Route path="/userlist" element={<UserList />} />
           <Route path="/register" element={<Register />} />
           <Route path="/placeorder" element={<PlaceOrder />} />

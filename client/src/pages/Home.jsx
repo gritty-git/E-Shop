@@ -6,6 +6,7 @@ import Loader from './../components/Loader';
 import { useSelector, useDispatch } from 'react-redux';
 import { ProductsActions } from '../store/products';
 
+
 export default function Home() {
     const products = useSelector(state => state.products.data);
     const loading = useSelector(state => state.products.loading);

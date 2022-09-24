@@ -17,16 +17,17 @@ const PlaceOrder = () => {
 
   const totalPrice = cart.cartItems.reduce((acc, item) => 0 + item.price * item.qty, 0);
 
-  useEffect(() => {
-    if (success) {
-      navigate(`/profile`);
-    }
+  // useEffect(() => {
+  //   if (success) {
 
-  }, [success, order])
+  //   }
+
+  // }, [success, order])
   //console.log(order, loading, success);
 
   const placeOrderHandler = async () => {
     dispatch(orderCreateActions.orderCreateRequest());
+
     // console.log(order, loading, success, orderCreateActions);
     const config = {
       headers: {
@@ -34,10 +35,12 @@ const PlaceOrder = () => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
+    console.log("data");
     try {
       const { data } = await axios.post(`/api/orders`, { ...cart, totalPrice }, config);
-
+      console.log(data);
       dispatch(orderCreateActions.orderCreateSuccess(data));
+      navigate(`/order/${data._id}`);
 
     } catch (error) {
       console.log(error);

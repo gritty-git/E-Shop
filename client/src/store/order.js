@@ -9,6 +9,7 @@ const orderSlice = createSlice({
     initialState: initialOrderCreateState,
     reducers: {
         orderCreateRequest(state) {
+            console.log("dd");
             state.loading = true;
         },
         orderCreateRequestClose(state) {

@@ -29,7 +29,7 @@ const Cart = () => {
     const isAuthenticated = useSelector((state) => state.auth.authenticated);
     const cart = useSelector((state) => state.cart)
     const { cartItems } = cart;
-    console.log(location, qty, productId, cart);
+    //console.log(location, qty, productId, cart);
     useEffect(() => {
         if (productId) {
             dispatchAndStore(productId, qty);
