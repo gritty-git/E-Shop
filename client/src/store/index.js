@@ -7,9 +7,10 @@ import cartReducer from './cart';
 import orderCreateReducer from './order';
 import orderDetailReducer from './orderDetails';
 import myOrdersReducer from './myOrders';
+import usersReducer from './users';
 
 const store = configureStore({
-    reducer: { auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer }
+    reducer: { auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer, users: usersReducer }
 });
 
 

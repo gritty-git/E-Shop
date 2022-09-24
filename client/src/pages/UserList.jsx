@@ -1,18 +1,35 @@
 import { useEffect } from 'react'
-import { LinkContainer } from 'react-router-bootstrap'
-import { Table, Button } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
-import { listUsers } from '../actions/userActions'
+import { usersActions } from '../store/users'
+import axios from 'axios'
 
 const UserList = () => {
     const dispatch = useDispatch()
 
-    const userList = useSelector((state) => state.userList)
-    const { loading, error, users } = userList
+    const { users, loading } = useSelector((state) => state.users);
+    const { userInfo } = useSelector((state) => state.auth);
+    const dispatchAndGetUsers = async () => {
+
+        dispatch(usersActions.usersRequest());
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${userInfo.token}`,
+                },
+            }
+            const { data } = await axios.get(`/api/users`, config);
+            // console.log(data);
+            dispatch(usersActions.usersSuccess(data));
+        } catch (error) {
+            dispatch(usersActions.usersRequestClose());
+        }
+
+    }
 
     useEffect(() => {
-        dispatch(listUsers())
+        dispatchAndGetUsers()
     }, [dispatch])
 
 
@@ -22,8 +39,6 @@ const UserList = () => {
             <h1>Users</h1>
             {loading ? (
                 <Loader />
-            ) : error ? (
-                <Message variant='danger'>{error}</Message>
             ) : (
                 <Table striped bordered hover responsive className='table-sm'>
                     <thead>
