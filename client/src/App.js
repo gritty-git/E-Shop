@@ -12,6 +12,7 @@ import Footer from './components/Footer'
 import Profile from './pages/Profile';
 import UserList from './pages/UserList';
 import ProductScreen from './pages/ProductScreen';
+import Shipping from './pages/Shipping';
 
 
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/product/:id" element={<ProductScreen />} />
+          <Route path="/shipping" element={<Shipping />} />
           <Route path="/search/:searchterm" element={<Search />} />
           <Route path="*" element={<Home />} />
         </Routes>

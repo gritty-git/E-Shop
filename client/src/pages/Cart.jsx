@@ -44,7 +44,7 @@ const Cart = () => {
     const checkoutHandler = () => {
 
         if (isAuthenticated) {
-            navigate(`/profile`);
+            navigate(`/shipping`);
         } else {
             navigate('/login');
         }
