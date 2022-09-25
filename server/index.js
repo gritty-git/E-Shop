@@ -26,8 +26,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '../client/build')));
@@ -39,6 +37,10 @@ if (process.env.NODE_ENV === 'production') {
         res.send('API is Running');
     });
 }
+
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
