@@ -1,22 +1,30 @@
-import React, { useEffect } from 'react'
-import { Table, Button, Row, Col } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+import { Form, Table, Button, Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
+import Message from '../components/Message'
 import { myOrdersActions } from '../store/myOrders';
+import { authActions } from '../store/auth';
 import axios from 'axios';
 
 import Loader from '../components/Loader'
 
 
 const Profile = () => {
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [message, setMessage] = useState(null)
 
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const { userInfo } = useSelector((state) => state.auth);
+    const { userInfo, success } = useSelector((state) => state.auth);
 
     const myOrders = useSelector((state) => state.myOrders);
     const { loading, orders } = myOrders;
+
     const dispatchAndGetOrders = async () => {
 
         dispatch(myOrdersActions.myOrdersRequest());
@@ -31,6 +39,9 @@ const Profile = () => {
             dispatch(myOrdersActions.myOrdersSuccess(data));
         } catch (error) {
             dispatch(myOrdersActions.myOrdersRequestClose());
+            setMessage(error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message);
         }
 
     }
@@ -39,13 +50,96 @@ const Profile = () => {
         if (!userInfo.token) {
             navigate('/login');
         } else {
-            dispatchAndGetOrders()
+            setName(userInfo.name);
+            setEmail(userInfo.email);
+            dispatchAndGetOrders();
+
         }
     }, [dispatch, userInfo])
+    const dispatchAndUpdateUser = async (user) => {
+        try {
+            dispatch(authActions.updateRequest());
+            //const { userInfo } = useSelector((state) => state.auth);
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${userInfo.token}`,
+                },
+            }
+            const { data } = await axios.put(`/api/users/profile`, user, config);
+            dispatch(authActions.updateUserSuccess());
+        } catch (error) {
+            dispatch(authActions.updateUserFail(error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message));
+        }
 
+    }
 
+    const submitHandler = (e) => {
+        e.preventDefault()
+        if (password !== confirmPassword) {
+            setMessage('Passwords do not match')
+        } else {
+            //dispatch(updateUserProfile({ id: user._id, name, email, password }))
+            dispatchAndUpdateUser({ id: userInfo._id, name, email, password });
+            //dispatch(authActions.updateUser({ id: user._id, name, email, password }));
+        }
+    }
     return (
         <Row>
+            <Col md={3}>
+                <h2>User Profile</h2>
+                {message && <Message variant='danger'>{message}</Message>}
+
+                {success && <Message variant='success'>Profile Updated</Message>}
+                {loading && <Loader />}
+                <Form onSubmit={submitHandler}>
+                    <Form.Group controlId='name'>
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                            type='name'
+                            placeholder='Enter name'
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        ></Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId='email'>
+                        <Form.Label>Email Address</Form.Label>
+                        <Form.Control
+                            type='email'
+                            placeholder='Enter email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        ></Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId='password'>
+                        <Form.Label>Password Address</Form.Label>
+                        <Form.Control
+                            type='password'
+                            placeholder='Enter password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        ></Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId='confirmPassword'>
+                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Control
+                            type='password'
+                            placeholder='Confirm password'
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        ></Form.Control>
+                    </Form.Group>
+
+                    <Button type='submit' variant='primary'>
+                        Update
+                    </Button>
+                </Form>
+            </Col>
             <Col md={9}>
                 <h2>My Orders</h2>
                 {loading ? (
