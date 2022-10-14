@@ -4,8 +4,8 @@ const users = [
     {
         name: 'M Soumya Prakash Sahoo',
         email: 'msoumya.iitbhu@gmail.com',
-        password: bcrypt.hashSync('likuliku', 10)
-
+        password: bcrypt.hashSync('likuliku', 10),
+        isAdmin: true,
     },
     {
         name: 'ASDFGHJKL',
