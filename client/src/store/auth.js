@@ -6,7 +6,7 @@ const userInfoFromStorage = localStorage.getItem('userInfo')
 
 
 
-const initialAuthState = { authenticated: (Object.keys(userInfoFromStorage).length != 0), loading: false, userInfo: userInfoFromStorage };
+const initialAuthState = { authenticated: (Object.keys(userInfoFromStorage).length != 0), loading: false, userInfo: userInfoFromStorage, error: null };
 
 const authSlice = createSlice({
     name: 'auth',
@@ -28,6 +28,11 @@ const authSlice = createSlice({
             state.loading = false;
             state.userInfo = {};
         },
+        failure(state, action) {
+            state.authenticated = false;
+            state.loading = false;
+            state.error = action.payload;
+        }
 
     }
 });

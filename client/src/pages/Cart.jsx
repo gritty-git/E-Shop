@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 import { cartActions } from '../store/cart';
 import axios from 'axios';
+import Message from '../components/Message';
 
 
 const Cart = () => {
@@ -29,7 +30,7 @@ const Cart = () => {
     const isAuthenticated = useSelector((state) => state.auth.authenticated);
     const cart = useSelector((state) => state.cart)
     const { cartItems } = cart;
-    //console.log(location, qty, productId, cart);
+
     useEffect(() => {
         if (productId) {
             dispatchAndStore(productId, qty);
@@ -55,8 +56,9 @@ const Cart = () => {
             <Col md={8}>
                 <h1>Shopping Cart</h1>
                 {cartItems.length === 0 ? (
-                    <><p>Your cart is empty</p>
-                        <Link to='/'>Go Back</Link></>
+                    <Message>
+                        Your cart is empty <Link to='/'>Go Back</Link>
+                    </Message>
                 ) : (
                     <ListGroup variant='flush'>
                         {cartItems.map((item) => (

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import { Link, useNavigate } from 'react-router-dom';
 import Rating from '../components/Rating';
+import Message from '../components/Message'
 import { Row, Col, ListGroup, Card, Button, Image, Form } from 'react-bootstrap';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,16 +13,22 @@ import Loader from "../components/Loader";
 const ProductScreen = () => {
     const [qty, setQty] = useState(1);
     const navigate = useNavigate();
-    const product = useSelector(state => state.productbyId.data);
-    const loading = useSelector(state => state.productbyId.loading);
+    const { data: product, loading, error } = useSelector(state => state.productbyId);
+    //const loading = useSelector(state => state.productbyId.loading);
     const location = useLocation();
     const dispatch = useDispatch();
     const productId = location.pathname.split("/")[2];
     const fetchProduct = async () => {
-        dispatch(ProductbyIdActions.request());
-        const { data } = await axios.get(`/api/products/${productId}`);
-        dispatch(ProductbyIdActions.success(data));
-
+        console.log("made a call");
+        try {
+            dispatch(ProductbyIdActions.request());
+            const { data } = await axios.get(`/api/products/${productId}`);
+            dispatch(ProductbyIdActions.success(data));
+        } catch (error) {
+            dispatch(ProductbyIdActions.failure(error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message));
+        }
     }
     useEffect(() => {
         fetchProduct();
@@ -35,7 +42,11 @@ const ProductScreen = () => {
             <Link className='btn btn-light my-3' to='/'>
                 Go Back
             </Link>
-            {loading ? <Loader /> :
+            {loading ? (
+                <Loader />
+            ) : error ? (
+                <Message variant='danger'>{error}</Message>
+            ) :
                 <Row>
                     <Col md={6}>
                         <Image src={product.image} alt={product.name} fluid />

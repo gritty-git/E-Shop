@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
+import Message from '../components/Message';
 import axios from 'axios';
 import FormContainer from '../components/FormContainer';
 import { authActions } from '../store/auth';
@@ -56,7 +57,8 @@ const Register = () => {
     return (
         <FormContainer>
             <h1>Sign Up</h1>
-            {message && <p>{message}</p>}
+            {message && <Message variant='danger'>{message}</Message>}
+
 
             {loading && <Loader />}
             <Form onSubmit={submitHandler}>

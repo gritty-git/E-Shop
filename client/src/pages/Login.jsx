@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
 import { authActions } from '../store/auth';
@@ -13,9 +14,8 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const loading = useSelector((state) => state.auth.loading);
-    const isAuthenticated = useSelector((state) => state.auth.authenticated);
-    const [errorMsg, setErrorMsg] = useState('');
+    const { loading, authenticated: isAuthenticated, error } = useSelector((state) => state.auth);
+    //const isAuthenticated = useSelector((state) => state.auth.authenticated);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -39,8 +39,8 @@ const Login = () => {
             localStorage.setItem('userInfo', JSON.stringify(data));
 
         } catch (error) {
-            dispatch(authActions.authRequestClose());
-            setErrorMsg(error.response.data.message);
+            dispatch(authActions.failure(error.response.data.message));
+            //setErrorMsg();
         }
 
 
@@ -51,8 +51,9 @@ const Login = () => {
     return (
         <FormContainer>
             <h1>Sign In</h1>
+            {error && <Message variant='danger'>{error}</Message>}
             {loading && <Loader />}
-            {errorMsg}
+
             <Form onSubmit={submitHandler} className="mt-3">
                 <Form.Group controlId='email'>
                     <Form.Label>Email Address</Form.Label>

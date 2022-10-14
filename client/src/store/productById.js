@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 
-const initialProductbyIdState = { data: {}, loading: false };
+const initialProductbyIdState = { data: {}, loading: false, error: null };
 
 
 const ProductbyIdSlice = createSlice({
@@ -14,6 +14,10 @@ const ProductbyIdSlice = createSlice({
         success(state, action) {
             state.loading = false;
             state.data = action.payload;
+        },
+        failure(state, action) {
+            state.loading = false;
+            state.error = action.payload;
         },
 
     }
