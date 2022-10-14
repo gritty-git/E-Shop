@@ -8,7 +8,11 @@ const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
     ? JSON.parse(localStorage.getItem('shippingAddress'))
     : {}
 
-const initialCartState = { cartItems: cartFromStorage, shippingAddress: shippingAddressFromStorage };
+const paymentMethodFromStorage = localStorage.getItem('paymentMethod')
+    ? JSON.parse(localStorage.getItem('paymentMethod'))
+    : null
+
+const initialCartState = { cartItems: cartFromStorage, shippingAddress: shippingAddressFromStorage, paymentMethod: paymentMethodFromStorage };
 
 const cartSlice = createSlice({
     name: 'cart',
@@ -27,7 +31,9 @@ const cartSlice = createSlice({
         },
         saveShippingAddress(state, action) {
             state.shippingAddress = action.payload;
-
+        },
+        savePaymentMethod(state, action) {
+            state.paymentMethod = action.payload;
         }
 
     }

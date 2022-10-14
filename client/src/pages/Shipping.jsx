@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import FormContainer from '../components/FormContainer'
 import { cartActions } from '../store/cart';
 import { useNavigate } from 'react-router-dom'
-
+import CheckoutSteps from '../components/CheckoutSteps';
 
 const Shipping = () => {
     const cart = useSelector((state) => state.cart)
@@ -23,11 +23,12 @@ const Shipping = () => {
         dispatch(cartActions.saveShippingAddress({ address, city, postalCode, country }));
 
         localStorage.setItem('shippingAddress', JSON.stringify({ address, city, postalCode, country }));
-        navigate('/placeorder');
+        navigate('/payment');
     }
 
     return (
         <FormContainer>
+            <CheckoutSteps step1 step2 />
             <h1>Shipping</h1>
             <Form onSubmit={submitHandler}>
                 <Form.Group controlId='address'>

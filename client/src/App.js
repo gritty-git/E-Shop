@@ -15,7 +15,7 @@ import ProductScreen from './pages/ProductScreen';
 import Shipping from './pages/Shipping';
 import PlaceOrder from './pages/PlaceOrder';
 import Order from './pages/Order';
-
+import Payment from './pages/Payment'
 
 
 function App() {
@@ -37,6 +37,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/product/:id" element={<ProductScreen />} />
           <Route path="/shipping" element={<Shipping />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="/search/:searchterm" element={<Search />} />
           <Route path="*" element={<Home />} />
         </Routes>
