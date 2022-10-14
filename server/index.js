@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
 const morgan = require('morgan');
+const colors = require('colors');
 const cors = require('cors')
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -45,5 +46,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, function () {
-    console.log("Server running at " + PORT);
+    console.log(
+        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+    );
 })

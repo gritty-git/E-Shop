@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const users = require('./data/users');
 const products = require('./data/products');
+const colors = require('colors');
 const User = require('./models/userModel');
 const Product = require('./models/productModel');
 const Order = require('./models/orderModel');
@@ -19,7 +20,13 @@ const importData = async () => {
 
         const createdUsers = await User.insertMany(users);
 
-        await Product.insertMany(products);
+        const adminUser = createdUsers[0]._id;
+
+        const sampleProducts = products.map((product) => {
+            return { ...product, user: adminUser }
+        })
+
+        await Product.insertMany(sampleProducts);
 
         console.log('Data Imported!');
         process.exit();
