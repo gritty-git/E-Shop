@@ -1,56 +1,68 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { orderCreateActions } from './../store/order';
 import { useNavigate } from 'react-router-dom'
+import CheckoutSteps from '../components/CheckoutSteps';
 import axios from 'axios';
+import Message from '../components/Message';
 import Loader from '../components/Loader';
 
 const PlaceOrder = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cart = useSelector((state) => state.cart)
-  const { order, loading, success } = useSelector((state) => state.orderCreate);
+  const oldCart = useSelector((state) => state.cart)
+  const cart = { ...oldCart, itemsPrice: 0 }
+  const { order, loading, success, error } = useSelector((state) => state.orderCreate);
   const { userInfo } = useSelector((state) => state.auth);
-
-  const totalPrice = cart.cartItems.reduce((acc, item) => 0 + item.price * item.qty, 0);
 
   // useEffect(() => {
   //   if (success) {
 
   //   }
 
-  // }, [success, order])
-  //console.log(order, loading, success);
-
+  // }, [success])
+  const addDecimals = (num) => {
+    return (Math.round(num * 100) / 100).toFixed(2)
+  }
+  cart.itemsPrice = addDecimals(
+    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  )
+  cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 100)
+  cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)))
+  cart.totalPrice = (
+    Number(cart.itemsPrice) +
+    Number(cart.shippingPrice) +
+    Number(cart.taxPrice)
+  ).toFixed(2)
   const placeOrderHandler = async () => {
     dispatch(orderCreateActions.orderCreateRequest());
 
-    // console.log(order, loading, success, orderCreateActions);
     const config = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-    console.log("data");
-    try {
-      const { data } = await axios.post(`/api/orders`, { ...cart, totalPrice }, config);
-      console.log(data);
-      dispatch(orderCreateActions.orderCreateSuccess(data));
-      navigate(`/order/${data._id}`);
 
+    try {
+      const { data } = await axios.post(`/api/orders`, cart, config);
+
+      dispatch(orderCreateActions.orderCreateSuccess(data));
+      console.log("succ");
+      navigate(`/order/${data._id}`)
     } catch (error) {
-      console.log(error);
-      dispatch(orderCreateActions.orderCreateRequestClose());
+      dispatch(orderCreateActions.orderCreateFail(error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message));
     }
   }
 
   return (
     <>
-
+      <CheckoutSteps step1 step2 step3 step4 />
       <Row>
         <Col md={8}>
           <ListGroup variant='flush'>
@@ -63,11 +75,16 @@ const PlaceOrder = () => {
                 {cart.shippingAddress.country}
               </p>
             </ListGroup.Item>
+            <ListGroup.Item>
+              <h2>Payment Method</h2>
+              <strong>Method: </strong>
+              {cart.paymentMethod}
+            </ListGroup.Item>
 
             <ListGroup.Item>
               <h2>Order Items</h2>
               {cart.cartItems.length === 0 ? (
-                "Your cart is empty"
+                <Message>Your cart is empty</Message>
               ) : (
                 <ListGroup variant='flush'>
                   {cart.cartItems.map((item, index) => (
@@ -103,13 +120,31 @@ const PlaceOrder = () => {
               <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>
-
+              <ListGroup.Item>
+                <Row>
+                  <Col>Items</Col>
+                  <Col>${cart.itemsPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Shipping</Col>
+                  <Col>${cart.shippingPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Tax</Col>
+                  <Col>${cart.taxPrice}</Col>
+                </Row>
+              </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
-                  <Col>${totalPrice}</Col>
+                  <Col>${cart.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+              {error && <Message variant='danger'>{error}</Message>}
               <ListGroup.Item>
                 <Button
                   type='button'

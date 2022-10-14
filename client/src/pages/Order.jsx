@@ -5,6 +5,7 @@ import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import axios from 'axios';
+import Message from '../components/Message';
 import { orderDetailActions } from '../store/orderDetails';
 
 
@@ -13,16 +14,16 @@ const Order = () => {
     const orderId = location.pathname.split("/")[2];
     const dispatch = useDispatch();
 
-    const orderDetails = useSelector((state) => state.orderDetail);
-    const { order, loading } = orderDetails;
+    const { order: old_order, loading, error } = useSelector((state) => state.orderDetail);
+    const order = { ...old_order };
+
     const { userInfo } = useSelector((state) => state.auth);
-    console.log(order, loading);
     if (Object.keys(order).length) {
         const addDecimals = (num) => {
             return (Math.round(num * 100) / 100).toFixed(2)
         }
 
-        var totalPrice = addDecimals(
+        order.itemsPrice = addDecimals(
             order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
         )
     }
@@ -37,10 +38,12 @@ const Order = () => {
                 },
             }
             const { data } = await axios.get(`/api/orders/${id}`, config)
-            console.log(data);
+
             dispatch(orderDetailActions.orderDetailSuccess(data));
         } catch (error) {
-            dispatch(orderDetailActions.orderDetailRequestClose());
+            dispatch(orderDetailActions.orderDetailFail(error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message));
         }
 
     }
@@ -49,12 +52,12 @@ const Order = () => {
         if (orderId) {
             dispatchAndGet(orderId);
         }
-
-
-    }, [])
+    }, [dispatch, orderId])
 
     return (Object.keys(order).length == 0) ? (
         <Loader />
+    ) : error ? (
+        <Message variant='danger'>{error}</Message>
     ) : (
         <>
             <h1>Order {order._id}</h1>
@@ -76,9 +79,27 @@ const Order = () => {
                                 {order.shippingAddress.postalCode},{' '}
                                 {order.shippingAddress.country}
                             </p>
+                            {order.isDelivered ? (
+                                <Message variant='success'>
+                                    Delivered on {order.deliveredAt}
+                                </Message>
+                            ) : (
+                                <Message variant='danger'>Not Delivered</Message>
+                            )}
 
                         </ListGroup.Item>
-
+                        <ListGroup.Item>
+                            <h2>Payment Method</h2>
+                            <p>
+                                <strong>Method: </strong>
+                                {order.paymentMethod}
+                            </p>
+                            {order.isPaid ? (
+                                <Message variant='success'>Paid on {order.paidAt}</Message>
+                            ) : (
+                                <Message variant='danger'>Not Paid</Message>
+                            )}
+                        </ListGroup.Item>
 
                         <ListGroup.Item>
                             <h2>Order Items</h2>
@@ -119,11 +140,28 @@ const Order = () => {
                             <ListGroup.Item>
                                 <h2>Order Summary</h2>
                             </ListGroup.Item>
-
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>Items</Col>
+                                    <Col>${order.itemsPrice}</Col>
+                                </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>Shipping</Col>
+                                    <Col>${order.shippingPrice}</Col>
+                                </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Row>
+                                    <Col>Tax</Col>
+                                    <Col>${order.taxPrice}</Col>
+                                </Row>
+                            </ListGroup.Item>
                             <ListGroup.Item>
                                 <Row>
                                     <Col>Total</Col>
-                                    <Col>${totalPrice}</Col>
+                                    <Col>${order.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
                         </ListGroup>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialOrderDetailState = { order: {}, loading: false };
+const initialOrderDetailState = { order: {}, loading: false, error: null };
 
 const orderDetail = createSlice({
     name: 'orderDetail',
@@ -9,8 +9,9 @@ const orderDetail = createSlice({
         orderDetailRequest(state) {
             state.loading = true;
         },
-        orderDetailRequestClose(state) {
+        orderDetailFail(state, action) {
             state.loading = false;
+            state.error = action.payload;
         },
         orderDetailSuccess(state, action) {
             state.loading = false;
