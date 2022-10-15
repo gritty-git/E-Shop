@@ -16,6 +16,7 @@ import Shipping from './pages/Shipping';
 import PlaceOrder from './pages/PlaceOrder';
 import Order from './pages/Order';
 import Payment from './pages/Payment'
+import UserEdit from './pages/UserEdit'
 
 
 function App() {
@@ -31,10 +32,11 @@ function App() {
           <Route path="/cart/" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/order/:id" element={<Order />} />
-          <Route path="/userlist" element={<UserList />} />
+          <Route path="/admin/userlist" element={<UserList />} />
           <Route path="/register" element={<Register />} />
           <Route path="/placeorder" element={<PlaceOrder />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path='/admin/user/:id/edit' element={<UserEdit />} />
           <Route path="/product/:id" element={<ProductScreen />} />
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/payment" element={<Payment />} />
