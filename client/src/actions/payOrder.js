@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { orderPayActions } from '../store/orderPay';
 import axios from 'axios';
 

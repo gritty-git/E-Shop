@@ -7,12 +7,13 @@ import { usersActions } from '../store/users'
 import axios from 'axios'
 import Message from './../components/Message';
 import { useNavigate } from 'react-router-dom'
-
+import { deleteUser } from '../actions/deleteUser'
 
 const UserList = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const { users, loading, error } = useSelector((state) => state.users);
+    const { error: deleteError, success, loading: deleteLoading } = useSelector((state) => state.deleteUser)
     const { userInfo } = useSelector((state) => state.auth);
     const dispatchAndGetUsers = async () => {
 
@@ -38,10 +39,13 @@ const UserList = () => {
         // if (userInfo && userInfo.isAdmin) dispatchAndGetUsers()
         // else navigate('/login')
         dispatchAndGetUsers()
-    }, [dispatch])
+    }, [dispatch, success])
 
     const deleteHandler = (id) => {
-        console.log('delete')
+        if (window.confirm('Are you sure')) {
+            dispatch(deleteUser(id, dispatch, userInfo))
+        }
+
     }
 
     return (
