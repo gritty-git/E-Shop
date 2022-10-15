@@ -1,22 +1,27 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from "react-router";
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
+import { PayPalButton } from 'react-paypal-button-v2'
 import axios from 'axios';
 import Message from '../components/Message';
+import { PayOrder } from '../actions/PayOrder';
 import { orderDetailActions } from '../store/orderDetails';
+import { orderPayActions } from '../store/orderPay';
 
 
 const Order = () => {
     const location = useLocation();
     const orderId = location.pathname.split("/")[2];
     const dispatch = useDispatch();
-
+    const [sdkReady, setSdkReady] = useState(false)
     const { order: old_order, loading, error } = useSelector((state) => state.orderDetail);
     const order = { ...old_order };
 
+    const { loading: loadingPay, success: successPay } = useSelector((state) => state.orderPay);
+    console.log(order, loadingPay, sdkReady, successPay);
     const { userInfo } = useSelector((state) => state.auth);
     if (Object.keys(order).length) {
         const addDecimals = (num) => {
@@ -38,7 +43,7 @@ const Order = () => {
                 },
             }
             const { data } = await axios.get(`/api/orders/${id}`, config)
-
+            console.log("data is ", data);
             dispatch(orderDetailActions.orderDetailSuccess(data));
         } catch (error) {
             dispatch(orderDetailActions.orderDetailFail(error.response && error.response.data.message
@@ -49,10 +54,41 @@ const Order = () => {
     }
 
     useEffect(() => {
-        if (orderId) {
-            dispatchAndGet(orderId);
+        const addPayPalScript = async () => {
+            console.log("paypal script ran");
+            const { data: clientId } = await axios.get('/api/config/paypal')
+            const script = document.createElement('script')
+            script.type = 'text/javascript'
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+            script.async = true
+            script.onload = () => {
+                setSdkReady(true)
+            }
+            document.body.appendChild(script)
         }
-    }, [dispatch, orderId])
+        console.log(order, successPay)
+
+        if (Object.keys(order).length == 0 || successPay) {
+            console.log("dispatching");
+            dispatch(orderPayActions.orderPayReset());
+            addPayPalScript()
+            dispatchAndGet(orderId);
+        } else if (!order.isPaid) {
+            console.log("order not paid");
+            if (!window.paypal) {
+                console.log("ruunning script");
+                addPayPalScript()
+            } else {
+                setSdkReady(true)
+            }
+        }
+    }, [dispatch, orderId, successPay])
+
+    const successPaymentHandler = (paymentResult) => {
+        console.log(paymentResult);
+        PayOrder(orderId, paymentResult, dispatch, userInfo);
+
+    }
 
     return (Object.keys(order).length == 0) ? (
         <Loader />
@@ -164,6 +200,19 @@ const Order = () => {
                                     <Col>${order.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
+                            {!order.isPaid && (
+                                <ListGroup.Item>
+                                    {loadingPay && <Loader />}
+                                    {!sdkReady ? (
+                                        <Loader />
+                                    ) : (
+                                        <PayPalButton
+                                            amount={order.totalPrice}
+                                            onSuccess={successPaymentHandler}
+                                        />
+                                    )}
+                                </ListGroup.Item>
+                            )}
                         </ListGroup>
                     </Card>
                 </Col>

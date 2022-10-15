@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialOrderPayState = { success: true, loading: false, error: null };
+const initialOrderPayState = { success: false, loading: false, error: null };
 
 const orderPay = createSlice({
     name: 'orderPay',
@@ -17,6 +17,10 @@ const orderPay = createSlice({
             state.loading = false;
             state.success = true;
         },
+        orderPayReset(state) {
+            console.log("hereee");
+            state = {};
+        }
 
     }
 });

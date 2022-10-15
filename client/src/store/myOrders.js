@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 
-const initialMyOrdersState = { orders: [], loading: false };
+const initialMyOrdersState = { orders: [], loading: false, error: null };
 
 const myOrdersSlice = createSlice({
     name: 'myOrders',
@@ -12,7 +12,8 @@ const myOrdersSlice = createSlice({
 
             state.loading = true;
         },
-        myOrdersRequestClose(state) {
+        myOrdersRequestFail(state, action) {
+            state.error = action.payload;
             state.loading = false;
         },
         myOrdersSuccess(state, action) {

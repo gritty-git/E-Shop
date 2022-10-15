@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { orderPayActions } from '../store/orderPay';
+import axios from 'axios';
 
-export const payOrder = async (orderId, paymentResult) => {
-    const dispatch = useDispatch();
+export const PayOrder = async (orderId, paymentResult, dispatch, userInfo) => {
+    //const dispatch = useDispatch();
+    // const { userInfo } = useSelector((state) => state.auth);
     try {
         dispatch(orderPayActions.orderPayRequest());
-        const { userInfo } = useSelector((state) => state.auth);
 
+        console.log("came here");
         const config = {
             headers: {
                 'Content-Type': 'application/json',

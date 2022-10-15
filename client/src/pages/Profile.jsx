@@ -23,7 +23,7 @@ const Profile = () => {
     const { userInfo, success } = useSelector((state) => state.auth);
 
     const myOrders = useSelector((state) => state.myOrders);
-    const { loading, orders } = myOrders;
+    const { loading, error: errorOrders, orders } = myOrders;
 
     const dispatchAndGetOrders = async () => {
 
@@ -38,7 +38,9 @@ const Profile = () => {
             // console.log(data);
             dispatch(myOrdersActions.myOrdersSuccess(data));
         } catch (error) {
-            dispatch(myOrdersActions.myOrdersRequestClose());
+            dispatch(myOrdersActions.myOrdersRequestFail(error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message));
             setMessage(error.response && error.response.data.message
                 ? error.response.data.message
                 : error.message);
@@ -144,6 +146,8 @@ const Profile = () => {
                 <h2>My Orders</h2>
                 {loading ? (
                     <Loader />
+                ) : errorOrders ? (
+                    <Message variant='danger'>{errorOrders}</Message>
                 ) : (
                     <Table striped bordered hover responsive className='table-sm'>
                         <thead>
