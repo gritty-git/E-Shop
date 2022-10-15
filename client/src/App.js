@@ -18,6 +18,7 @@ import Order from './pages/Order';
 import Payment from './pages/Payment'
 import UserEdit from './pages/UserEdit'
 import ProductList from './pages/ProductList'
+import ProductEdit from './pages/ProductEdit';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
           <Route path="/product/:id" element={<ProductScreen />} />
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/admin/product/:id/edit" element={<ProductEdit />} />
           <Route path="/admin/productlist" element={<ProductList />} />
           <Route path="/search/:searchterm" element={<Search />} />
           <Route path="*" element={<Home />} />

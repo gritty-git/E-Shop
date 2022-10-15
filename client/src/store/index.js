@@ -13,9 +13,11 @@ import deleteUserReducer from "./deleteUser";
 import userDetailsReducer from "./userDetails";
 import updateUserReducer from "./updateUser";
 import deleteProductReducer from "./deleteProduct";
+import createProductReducer from "./createProduct";
+import updateProductReducer from "./updateProduct";
 
 const store = configureStore({
-    reducer: { deleteProduct: deleteProductReducer, updateUser: updateUserReducer, userDetails: userDetailsReducer, deleteUser: deleteUserReducer, orderPay: orderPayReducer, auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer, users: usersReducer }
+    reducer: { updateProduct: updateProductReducer, createProduct: createProductReducer, deleteProduct: deleteProductReducer, updateUser: updateUserReducer, userDetails: userDetailsReducer, deleteUser: deleteUserReducer, orderPay: orderPayReducer, auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer, users: usersReducer }
 });
 
 
