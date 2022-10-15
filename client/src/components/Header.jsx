@@ -48,6 +48,10 @@ function Header() {
                             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <NavLink className="dropdown-item" to="/profile">View Profile</NavLink>
                                 <NavLink className="dropdown-item" to="/admin/userlist">View All Users</NavLink>
+                                <NavLink className="dropdown-item" to="/admin/productlist">All Products</NavLink>
+                                <NavLink className="dropdown-item" to="/admin/orderlist">All Orders</NavLink>
+
+
                                 <button type="button" className="btn btn-danger" style={{ "marginLeft": 12 }} onClick={logoutHandler}>Logout</button>
 
                             </div>

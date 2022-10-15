@@ -19,7 +19,7 @@ const ProductScreen = () => {
     const dispatch = useDispatch();
     const productId = location.pathname.split("/")[2];
     const fetchProduct = async () => {
-        console.log("made a call");
+
         try {
             dispatch(ProductbyIdActions.request());
             const { data } = await axios.get(`/api/products/${productId}`);

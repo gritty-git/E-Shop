@@ -12,9 +12,10 @@ import orderPayReducer from './orderPay';
 import deleteUserReducer from "./deleteUser";
 import userDetailsReducer from "./userDetails";
 import updateUserReducer from "./updateUser";
+import deleteProductReducer from "./deleteProduct";
 
 const store = configureStore({
-    reducer: { updateUser: updateUserReducer, userDetails: userDetailsReducer, deleteUser: deleteUserReducer, orderPay: orderPayReducer, auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer, users: usersReducer }
+    reducer: { deleteProduct: deleteProductReducer, updateUser: updateUserReducer, userDetails: userDetailsReducer, deleteUser: deleteUserReducer, orderPay: orderPayReducer, auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer, users: usersReducer }
 });
 
 

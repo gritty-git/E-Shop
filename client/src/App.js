@@ -17,6 +17,7 @@ import PlaceOrder from './pages/PlaceOrder';
 import Order from './pages/Order';
 import Payment from './pages/Payment'
 import UserEdit from './pages/UserEdit'
+import ProductList from './pages/ProductList'
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path="/product/:id" element={<ProductScreen />} />
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/admin/productlist" element={<ProductList />} />
           <Route path="/search/:searchterm" element={<Search />} />
           <Route path="*" element={<Home />} />
         </Routes>
