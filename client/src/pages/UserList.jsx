@@ -1,14 +1,18 @@
 import { useEffect } from 'react'
-import { Table } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
+import { Table, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import { usersActions } from '../store/users'
 import axios from 'axios'
+import Message from './../components/Message';
+import { useNavigate } from 'react-router-dom'
+
 
 const UserList = () => {
     const dispatch = useDispatch()
-
-    const { users, loading } = useSelector((state) => state.users);
+    const navigate = useNavigate();
+    const { users, loading, error } = useSelector((state) => state.users);
     const { userInfo } = useSelector((state) => state.auth);
     const dispatchAndGetUsers = async () => {
 
@@ -23,46 +27,74 @@ const UserList = () => {
             // console.log(data);
             dispatch(usersActions.usersSuccess(data));
         } catch (error) {
-            dispatch(usersActions.usersRequestClose());
+            dispatch(usersActions.usersRequestFail(error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message));
         }
 
     }
 
     useEffect(() => {
+        // if (userInfo && userInfo.isAdmin) dispatchAndGetUsers()
+        // else navigate('/login')
         dispatchAndGetUsers()
     }, [dispatch])
 
-
+    const deleteHandler = (id) => {
+        console.log('delete')
+    }
 
     return (
         <>
             <h1>Users</h1>
             {loading ? (
                 <Loader />
-            ) : (
-                <Table striped bordered hover responsive className='table-sm'>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => (
-                            <tr key={user._id}>
-                                <td>{user._id}</td>
-                                <td>{user.name}</td>
-                                <td>
-                                    <a href={`mailto:${user.email}`}>{user.email}</a>
-                                </td>
-
+            ) : error ?
+                <Message variant='danger'>{error}</Message>
+                : (
+                    <Table striped bordered hover responsive className='table-sm'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NAME</th>
+                                <th>EMAIL</th>
+                                <th>ADMIN</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            )}
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user._id}>
+                                    <td>{user._id}</td>
+                                    <td>{user.name}</td>
+                                    <td>
+                                        <a href={`mailto:${user.email}`}>{user.email}</a>
+                                    </td>
+                                    <td>
+                                        {user.isAdmin ? (
+                                            <i className='fas fa-check' style={{ color: 'green' }}></i>
+                                        ) : (
+                                            <i className='fas fa-times' style={{ color: 'red' }}></i>
+                                        )}
+                                    </td>
+                                    <td>
+                                        <LinkContainer to={`/user/${user._id}/edit`}>
+                                            <Button variant='light' className='btn-sm'>
+                                                <i className='fas fa-edit'></i>
+                                            </Button>
+                                        </LinkContainer>
+                                        <Button
+                                            variant='danger'
+                                            className='btn-sm'
+                                            onClick={() => deleteHandler(user._id)}
+                                        >
+                                            <i className='fas fa-trash'></i>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                )}
         </>
     )
 }

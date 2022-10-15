@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialUsersState = { users: [], loading: false };
+const initialUsersState = { users: [], loading: false, error: null };
 
 const UsersSlice = createSlice({
     name: 'users',
@@ -10,8 +10,9 @@ const UsersSlice = createSlice({
 
             state.loading = true;
         },
-        usersRequestClose(state) {
+        usersRequestFail(state, action) {
             state.loading = false;
+            state.error = action.payload;
         },
         usersSuccess(state, action) {
 
