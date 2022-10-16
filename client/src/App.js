@@ -44,9 +44,16 @@ function App() {
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/admin/product/:id/edit" element={<ProductEdit />} />
-          <Route path="/admin/productlist" element={<ProductList />} />
+          <Route path="/admin/productlist" element={<ProductList />} exact />
+          <Route path='/admin/productlist/:pageNumber' element={<ProductList />} exact />
           <Route path="/admin/orderlist" element={<OrderList />} />
-          <Route path="/search/:searchterm" element={<Search />} />
+          <Route path="/search/:searchterm" element={<Home />} exact />
+          <Route path='/page/:pageNumber' element={<Home />} exact />
+          <Route
+            path='/search/:keyword/page/:pageNumber'
+            element={<Home />}
+            exact
+          />
           <Route path="*" element={<Home />} />
         </Routes>
       </div>

@@ -17,10 +17,10 @@ import createProductReducer from "./createProduct";
 import updateProductReducer from "./updateProduct";
 import orderListReducer from "./orderList";
 import orderDeliverReducer from "./orderDeliver";
+import productCreateReviewReducer from "./productCreateReview";
 
 const store = configureStore({
-    reducer: { orderDeliver: orderDeliverReducer, orderList: orderListReducer, updateProduct: updateProductReducer, createProduct: createProductReducer, deleteProduct: deleteProductReducer, updateUser: updateUserReducer, userDetails: userDetailsReducer, deleteUser: deleteUserReducer, orderPay: orderPayReducer, auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer, users: usersReducer }
+    reducer: { productCreateReview: productCreateReviewReducer, orderDeliver: orderDeliverReducer, orderList: orderListReducer, updateProduct: updateProductReducer, createProduct: createProductReducer, deleteProduct: deleteProductReducer, updateUser: updateUserReducer, userDetails: userDetailsReducer, deleteUser: deleteUserReducer, orderPay: orderPayReducer, auth: authReducer, products: productsReducer, productbyId: productByIdReducer, cart: cartReducer, orderCreate: orderCreateReducer, orderDetail: orderDetailReducer, myOrders: myOrdersReducer, users: usersReducer }
 });
-
 
 export default store;

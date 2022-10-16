@@ -4,15 +4,16 @@ import { deleteProductActions } from "../store/deleteProduct";
 import { createProductActions } from "../store/createProduct";
 import { ProductbyIdActions } from "../store/productById";
 import { updateProductActions } from "../store/updateProduct";
+import { ProductCreateReviewActions } from "../store/productCreateReview";
 
-export const listProducts = async (dispatch) => {
-
+export const listProducts = async (keyword = '', pageNumber = '', dispatch) => {
+    console.log("called");
     try {
         dispatch(ProductsActions.request());
 
-        const { data } = await axios.get('/api/products')
-        console.log(data.products);
-        dispatch(ProductsActions.success(data.products));
+        const { data } = await axios.get(`/api/products?keyword=${keyword ? keyword : ""}&pageNumber=${pageNumber}`)
+        console.log(data);
+        dispatch(ProductsActions.success(data));
     } catch (error) {
         dispatch(ProductsActions.failure(error.response && error.response.data.message
             ? error.response.data.message
@@ -99,6 +100,33 @@ export const updateProduct = async (product, dispatch, userInfo) => {
         dispatch(updateProductActions.updateProductFail(error.response && error.response.data.message
             ? error.response.data.message
             : error.message));
+
+    }
+}
+
+export const createProductReview = async (
+    productId,
+    review,
+    dispatch,
+    userInfo
+) => {
+    try {
+        dispatch(ProductCreateReviewActions.request());
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+            },
+        }
+
+        await axios.post(`/api/products/${productId}/reviews`, review, config)
+        dispatch(ProductCreateReviewActions.success());
+
+    } catch (error) {
+        dispatch(ProductCreateReviewActions.failure(error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message))
 
     }
 }

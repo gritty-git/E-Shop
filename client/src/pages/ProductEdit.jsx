@@ -144,7 +144,7 @@ const ProductEdit = () => {
                             /> */}
                             <Form.Control
                                 type="file"
-                                id='image-file'
+
                                 label='Choose File'
                                 custom
                                 onChange={uploadFileHandler} />

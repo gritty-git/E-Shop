@@ -13,7 +13,9 @@ const ProductsSlice = createSlice({
         },
         success(state, action) {
             state.loading = false;
-            state.data = action.payload;
+            state.data = action.payload.products;
+            state.pages = action.payload.pages;
+            state.page = action.payload.page;
         },
         failure(state, action) {
             state.loading = false;
