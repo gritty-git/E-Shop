@@ -8,8 +8,10 @@ import { PayPalButton } from 'react-paypal-button-v2'
 import axios from 'axios';
 import Message from '../components/Message';
 import { PayOrder } from '../actions/PayOrder';
+import { listOrders, deliverOrder } from '../actions/orderActions'
 import { orderDetailActions } from '../store/orderDetails';
 import { orderPayActions } from '../store/orderPay';
+import { orderDeliverActions } from '../store/orderDeliver';
 
 
 const Order = () => {
@@ -19,7 +21,7 @@ const Order = () => {
     const [sdkReady, setSdkReady] = useState(false)
     const { order: old_order, loading, error } = useSelector((state) => state.orderDetail);
     const order = { ...old_order };
-
+    const { loading: loadingDeliver, success: successDeliver } = useSelector((state) => state.orderDeliver)
     const { loading: loadingPay, success: successPay } = useSelector((state) => state.orderPay);
     console.log(order, loadingPay, sdkReady, successPay);
     const { userInfo } = useSelector((state) => state.auth);
@@ -68,9 +70,10 @@ const Order = () => {
         }
         console.log(order, successPay)
 
-        if (Object.keys(order).length == 0 || successPay) {
+        if (Object.keys(order).length == 0 || successPay || successDeliver) {
             console.log("dispatching");
             dispatch(orderPayActions.orderPayReset());
+            dispatch(orderDeliverActions.orderDeliverReset());
             addPayPalScript()
             dispatchAndGet(orderId);
         } else if (!order.isPaid) {
@@ -82,12 +85,16 @@ const Order = () => {
                 setSdkReady(true)
             }
         }
-    }, [dispatch, orderId, successPay])
+    }, [dispatch, orderId, successPay, successDeliver])
 
     const successPaymentHandler = (paymentResult) => {
         console.log(paymentResult);
         PayOrder(orderId, paymentResult, dispatch, userInfo);
 
+    }
+
+    const deliverHandler = () => {
+        deliverOrder(order, dispatch, userInfo)
     }
 
     return (Object.keys(order).length == 0) ? (
@@ -211,6 +218,18 @@ const Order = () => {
                                             onSuccess={successPaymentHandler}
                                         />
                                     )}
+                                </ListGroup.Item>
+                            )}
+                            {loadingDeliver && <Loader />}
+                            {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                <ListGroup.Item>
+                                    <Button
+                                        type='button'
+                                        className='btn btn-block'
+                                        onClick={deliverHandler}
+                                    >
+                                        Mark As Delivered
+                                    </Button>
                                 </ListGroup.Item>
                             )}
                         </ListGroup>
