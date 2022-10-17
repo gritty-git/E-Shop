@@ -4,6 +4,7 @@ import { Table, Button, Row, Col } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
+import { ProductsActions } from "../store/products";
 import Paginate from '../components/Paginate'
 import { useParams } from "react-router-dom";
 import { listProducts, deleteProduct, createProduct } from '../actions/productActions'
@@ -36,12 +37,15 @@ const ProductList = ({ history, match }) => {
         // } else {
         //   navigate('/login');
         // }
+        if (!userInfo || !userInfo.isAdmin) {
+            dispatch(ProductsActions.failure("Not authorised as admin!"))
+        }
         if (successCreate) {
             navigate(`/admin/product/${createdProduct._id}/edit`)
         } else {
             listProducts("", pageNumber, dispatch);
         }
-    }, [dispatch, userInfo, successDelete, successCreate, createdProduct, pageNumber])
+    }, [dispatch, userInfo, successDelete, successCreate, createdProduct, pageNumber, error])
 
     const deleteHandler = (id) => {
         if (window.confirm('Are you sure')) {
@@ -60,9 +64,10 @@ const ProductList = ({ history, match }) => {
                     <h1>Products</h1>
                 </Col>
                 <Col className='text-right'>
-                    <Button className='my-3' onClick={createProductHandler}>
+
+                    {!error && <Button className='my-3' onClick={createProductHandler}>
                         <i className='fas fa-plus'></i> Create Product
-                    </Button>
+                    </Button>}
                 </Col>
             </Row>
             {loadingDelete && <Loader />}
