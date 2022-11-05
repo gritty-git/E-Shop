@@ -31,7 +31,7 @@ export default function Home() {
         //             : error.message));
         //     });
 
-    }, [dispatch, keyword, pageNumber]);
+    }, [dispatch, keyword, pageNumber, error]);
     return (
         <>
             <h1>Welcome To E - Shop</h1>
