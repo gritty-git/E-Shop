@@ -19,6 +19,11 @@
 
 ## Usage
 
+### Admin Credentials
+Usename: HashCash
+Password: HashCash0987
+
+
 ### Env Variables
 
 Create a .env file in then root and add the following
