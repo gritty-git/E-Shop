@@ -20,9 +20,10 @@
 ## Usage
 
 ### Admin Credentials
-Usename: HashCash
+```
+Email: hashcash@gmail.com
 Password: HashCash0987
-
+```
 
 ### Env Variables
 
